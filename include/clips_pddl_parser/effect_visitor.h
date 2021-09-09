@@ -18,8 +18,8 @@
  *  Read the full text in the LICENSE.GPL file in the doc directory.
  */
 
-#ifndef _PLUGINS_CLIPS_PDDL_PARSER_EFFECT_VISITOR_H_
-#define _PLUGINS_CLIPS_PDDL_PARSER_EFFECT_VISITOR_H_
+#ifndef CLIPS_PDDL_PARSER_EFFECT_VISITOR_H_
+#define CLIPS_PDDL_PARSER_EFFECT_VISITOR_H_
 
 #include <pddl_parser/pddl_parser.h>
 
@@ -40,4 +40,4 @@ private:
 	bool        positive_effect_;
 };
 
-#endif /* !PLUGINS_CLIPS_PDDL_PARSER_EFFECT_VISITOR_H__ */
+#endif /* !CLIPS_PDDL_PARSER_EFFECT_VISITOR_H__ */
