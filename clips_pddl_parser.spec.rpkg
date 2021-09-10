@@ -1,0 +1,37 @@
+Name:       {{{ git_dir_name }}}
+Release:    2021
+Version:    {{{ git_dir_version lead=0.3 }}}%{?dist}
+Summary:    CLIPS bindings for the PDDL parser.
+
+License:    GPLv2+
+URL:        https://github.com/fawkesrobotics/clips_pddl_parser
+VCS:        {{{ git_dir_vcs }}}
+
+Source: {{{ git_dir_pack }}}
+
+BuildRequires: g++ boost-devel cmake clips-mm spdlog
+
+%description
+CLIPs bindings for the PDDL parser that offers templates to represent PDDL
+domain and a function to parse domains to clips facts.
+
+%prep
+{{{ git_dir_setup_macro }}}
+
+%build
+%cmake
+%cmake_build
+
+%install
+%cmake_install
+
+%check
+%ctest
+
+%files
+%doc
+%{_includedir}/*
+%{_libdir}/*
+
+%changelog
+{{{ git_dir_changelog }}}
