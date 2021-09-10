@@ -18,10 +18,11 @@
  *  Read the full text in the LICENSE.GPL file in the doc directory.
  */
 
-#include "effect_visitor.h"
+#include <clips_pddl_parser/effect_visitor.h>
 
 using namespace std;
 using namespace pddl_parser;
+using namespace clips_pddl_parser;
 
 /** @class EffectToCLIPSFactVisitor "effect_visitor.h"
  * Translate a PDDL effect into CLIPS facts.

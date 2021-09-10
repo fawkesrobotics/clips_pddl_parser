@@ -18,10 +18,11 @@
  *  Read the full text in the LICENSE.GPL file in the doc directory.
  */
 
-#include "precondition_visitor.h"
+#include <clips_pddl_parser/precondition_visitor.h>
 
 using namespace std;
 using namespace pddl_parser;
+using namespace clips_pddl_parser;
 
 /** @class PreconditionToCLIPSFactVisitor "precondition_visitor.h"
  * Translate a PDDL precondition into CLIPS facts.
