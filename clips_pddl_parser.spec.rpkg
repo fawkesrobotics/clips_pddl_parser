@@ -9,7 +9,7 @@ VCS:        {{{ git_dir_vcs }}}
 
 Source: {{{ git_dir_pack }}}
 
-BuildRequires: g++ boost-devel cmake clips-mm spdlog
+BuildRequires: g++ boost-devel cmake clipsmm-devel spdlog-devel pddl_parser-devel
 
 %description
 CLIPs bindings for the PDDL parser that offers templates to represent PDDL
