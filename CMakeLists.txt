@@ -31,7 +31,7 @@ install(DIRECTORY include/clips_pddl_parser
 
 target_compile_features(clips_pddl_parser PRIVATE cxx_std_17)
 
-install(FILES src/pddl_parser.clp DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/clips)
+install(FILES src/domain.clp DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/clips)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
