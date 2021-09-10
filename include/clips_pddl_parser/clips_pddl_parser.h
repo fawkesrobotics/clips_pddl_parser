@@ -1,6 +1,6 @@
 
 /***************************************************************************
- *  communicator.h - protobuf network communication for CLIPS
+ *  clips_pddl_parser.h - PDDL parser for CLIPS
  *
  *  Created: Tue Apr 16 13:41:13 2013
  *  Copyright  2013-2014  Tim Niemueller [www.niemueller.de]

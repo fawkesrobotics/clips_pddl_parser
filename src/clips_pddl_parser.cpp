@@ -60,16 +60,13 @@ const std::filesystem::path sharedir{"clips"};
 namespace clips_pddl_parser {
 
 /** @class ClipsPddlParser <clips_pddl_parser/communicator.h>
- * CLIPS protobuf integration class.
- * This class adds functionality related to protobuf to a given CLIPS
- * environment. It supports the creation of communication channels
- * through protobuf_comm. An instance maintains its own message register
- * shared among server, peer, and clients.
- * @author Tim Niemueller
+ * PDDL parser CLIPS integration class.
+ * This class provides functionality to parse a PDDL domain to a given CLIPS
+ * environment. It stores the relevant domain information to dedicated facts.
  */
 
 /** Constructor.
- * @param env CLIPS environment to which to provide the protobuf functionality
+ * @param env CLIPS environment to which to provide the PDDL parsing functionality
  * @param env_mutex mutex to lock when operating on the CLIPS environment.
  * @param load_clips_templates If true, the target CLIPS fact templates are
  *                             loaded to the environment.
@@ -97,7 +94,10 @@ ClipsPddlParser::~ClipsPddlParser()
 	clips_->add_function(n, s); \
 	functions_.push_back(n);
 
-/** Setup CLIPS environment. */
+/** Setup CLIPS environment.
+ * @param load_clips_templates If true, the target CLIPS fact templates are
+ *                             loaded to the environment.
+ */
 void
 ClipsPddlParser::setup_clips(bool load_clips_templates)
 {
@@ -112,7 +112,6 @@ ClipsPddlParser::setup_clips(bool load_clips_templates)
 /** CLIPS function to parse a PDDL domain.
  * This parses the given domain and asserts domain facts for all parts of the
  * domain.
- * @param env_name The name of the calling environment
  * @param domain_file The path of the domain file to parse.
  */
 void
