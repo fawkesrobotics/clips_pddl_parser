@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+namespace clips_pddl_parser {
+
 class EffectToCLIPSFactVisitor : public boost::static_visitor<std::vector<std::string>>
 {
 public:
@@ -39,5 +41,7 @@ private:
 	std::string pddl_operator_;
 	bool        positive_effect_;
 };
+
+} // end namespace clips_pddl_parser
 
 #endif /* !CLIPS_PDDL_PARSER_EFFECT_VISITOR_H__ */

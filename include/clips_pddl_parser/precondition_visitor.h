@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+namespace clips_pddl_parser {
+
 class PreconditionToCLIPSFactVisitor : public boost::static_visitor<std::vector<std::string>>
 {
 public:
@@ -40,5 +42,7 @@ private:
 	uint        sub_counter_;
 	bool        is_main_;
 };
+
+} // end namespace clips_pddl_parser
 
 #endif /* !PLUGINS_CLIPS_PDDL_PARSER_PRECONDITION_VISITOR_H__ */
