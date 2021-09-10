@@ -1,0 +1,7 @@
+include(CMakeFindDependencyMacro)
+find_dependency(PddlParser)
+find_dependency(Boost COMPONENTS system)
+find_dependency(spdlog)
+include(FindPkgConfig)
+pkg_check_modules(clipsmm REQUIRED IMPORTED_TARGET clipsmm-1.0)
+include("${CMAKE_CURRENT_LIST_DIR}/ClipsPddlParserTargets.cmake")
