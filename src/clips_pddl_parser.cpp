@@ -101,7 +101,7 @@ ClipsPddlParser::setup_clips()
  * @param domain_file The path of the domain file to parse.
  */
 void
-ClipsPddlParser::parse_domain(std::string env_name, std::string domain_file) {
+ClipsPddlParser::parse_domain(std::string domain_file) {
 	Domain              domain;
 	try {
 		ifstream     df(domain_file);
@@ -113,15 +113,30 @@ ClipsPddlParser::parse_domain(std::string env_name, std::string domain_file) {
 		return;
 	}
 	std::lock_guard<std::mutex> lock(clips_mutex_);
-	for (auto &type : domain.types) {
-		string super_type = "";
-		if (!type.second.empty()) {
-			super_type = "(super-type " + type.second + ")";
+
+	for (const auto &temp : {"pddl-formula", "pddl-predicate", "domain-effect", "domain-object-type", "domain-predicate", "domain-operator-parameter", "domain-operator"}) {
+		CLIPS::Template::pointer domain_op = clips_->get_template("domain-operator");
+		if (!clips_->get_template(temp)) {
+			SPDLOG_WARN(std::string("CLIPS_PDDL_Parser: Did not get template ") +  temp + ", did you load pddl_domain.clp?");
 		}
-		env.assert_fact("(domain-object-type "
-		                "(name "
-		                + type.first + ")" + super_type + ")");
 	}
+
+	CLIPS::Template::pointer clips_template = clips_->get_template("domain-object-type");
+	for (auto &type : domain.types) {
+		CLIPS::Fact::pointer fact = CLIPS::Fact::create(*clips_, clips_template);
+		fact->set_slot("name", type.first);
+
+		if (!type.second.empty()) {
+			fact->set_slot("super-type", type.second);
+		}
+
+		CLIPS::Fact::pointer new_fact = clips_->assert_fact(fact);
+		if (!new_fact) {
+			SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-object-type fact failed");
+		}
+	}
+
+	clips_template = clips_->get_template("domain-predicate");
 	for (auto &predicate : domain.predicates) {
 		string param_string = "";
 		string type_string  = "";
@@ -129,50 +144,54 @@ ClipsPddlParser::parse_domain(std::string env_name, std::string domain_file) {
 			param_string += " " + param.first;
 			type_string += " " + param.second;
 		}
-		env.assert_fact("(domain-predicate"
-		                " (name "
-		                + predicate.first
-		                + ")"
-		                  " (param-names "
-		                + param_string
-		                + ")"
-		                  " (param-types "
-		                + type_string
-		                + ")"
-		                  ")");
+		CLIPS::Fact::pointer fact = CLIPS::Fact::create(*clips_, clips_template);
+		fact->set_slot("name", predicate.first);
+		fact->set_slot("param-names", param_string);
+		fact->set_slot("param-types", type_string);
+		CLIPS::Fact::pointer new_fact = clips_->assert_fact(fact);
+		if (!new_fact) {
+			SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-predicate fact failed");
+		}
 	}
 
+	clips_template = clips_->get_template("domain-operator-parameter");
 	for (auto &action : domain.actions) {
-		string params_string = "(param-names";
+		string params_string = "";
 		for (auto &param_pair : action.action_params) {
 			string param_name = param_pair.first;
 			string param_type = param_pair.second;
 			params_string += " " + param_name;
-			env.assert_fact("(domain-operator-parameter"
-			                " (name "
-			                + param_name
-			                + ")"
-			                  " (operator "
-			                + action.name
-			                + ")"
-			                  " (type "
-			                + param_type
-			                + ")"
-			                  ")");
+			CLIPS::Fact::pointer fact = CLIPS::Fact::create(*clips_, clips_template);
+			fact->set_slot("name", param_name);
+			fact->set_slot("operator", action.name);
+			fact->set_slot("type", param_type);
+			CLIPS::Fact::pointer new_fact = clips_->assert_fact(fact);
+
+			if (!new_fact) {
+				SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-operator-parameter fact failed");
+			}
+			}
+		clips_template = clips_->get_template("domain-operator");
+		CLIPS::Fact::pointer fact = CLIPS::Fact::create(*clips_, clips_template);
+		fact->set_slot("name", action.name);
+		fact->set_slot("param-names", params_string);
+		CLIPS::Fact::pointer new_fact = clips_->assert_fact(fact);
+		if (!new_fact) {
+			SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-operator fact failed");
 		}
-		params_string += ")";
-		env.assert_fact("(domain-operator (name " + action.name + ")" + params_string + ")");
+
 		vector<string> precondition_facts =
 		  boost::apply_visitor(PreconditionToCLIPSFactVisitor(action.name, 1, true),
 		                       action.precondition.expression);
 		for (auto &fact : precondition_facts) {
-			env.assert_fact(fact);
+			clips_->assert_fact(fact);
 		}
 		vector<string> effect_facts =
 		  boost::apply_visitor(EffectToCLIPSFactVisitor(action.name, true), action.effect.expression);
 		for (auto &fact : effect_facts) {
-			env.assert_fact(fact);
+			clips_->assert_fact(fact);
 		}
 	}
+}
 
 } // end namespace clips_pddl_parser
