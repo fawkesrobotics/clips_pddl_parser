@@ -11,9 +11,17 @@ Source: {{{ git_dir_pack }}}
 
 BuildRequires: g++ boost-devel cmake clipsmm-devel spdlog-devel pddl_parser-devel
 
+%package devel
+Requires: clips_pddl_parser
+Summary: clips_pddl_parser development files
+Provides: clips_pddl_parser-devel
+
 %description
-CLIPs bindings for the PDDL parser that offers templates to represent PDDL
+CLIPS bindings for the PDDL parser that offers templates to represent PDDL
 domain and a function to parse domains to clips facts.
+
+%description devel
+This package contains necessary headers files for integrating the clips_pddl_parser
 
 %prep
 {{{ git_dir_setup_macro }}}
@@ -26,12 +34,14 @@ domain and a function to parse domains to clips facts.
 %cmake_install
 
 %check
-%ctest
 
 %files
 %doc
-%{_includedir}/*
 %{_libdir}/*
+%{_datadir}/clips/*
+
+%files devel
+%{_includedir}/*
 
 %changelog
 {{{ git_dir_changelog }}}
