@@ -48,12 +48,12 @@ namespace clips_pddl_parser {
 class ClipsPddlParser
 {
 public:
-	ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex);
+	ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex, bool load_clips_templates);
 	~ClipsPddlParser();
 
 
 private:
-	void setup_clips();
+	void setup_clips(bool load_clips_templates);
 	void parse_domain(std::string domain_file);
 
 

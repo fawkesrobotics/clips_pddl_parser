@@ -38,14 +38,24 @@
 #include <clips_pddl_parser/clips_pddl_parser.h>
 #include <clips_pddl_parser/effect_visitor.h>
 #include <clips_pddl_parser/precondition_visitor.h>
+
 #include <pddl_parser/pddl_parser.h>
 #include <spdlog/spdlog.h>
-
 #include <clipsmm.h>
+
+#include <filesystem>
 #include <fstream>
 
 using namespace std;
 using namespace pddl_parser;
+
+namespace {
+#ifdef SHAREDIR
+const std::filesystem::path sharedir(SHAREDIR);
+#else
+const std::filesystem::path sharedir{"clips"};
+#endif
+} // namespace
 
 namespace clips_pddl_parser {
 
@@ -61,11 +71,13 @@ namespace clips_pddl_parser {
 /** Constructor.
  * @param env CLIPS environment to which to provide the protobuf functionality
  * @param env_mutex mutex to lock when operating on the CLIPS environment.
+ * @param load_clips_templates If true, the target CLIPS fact templates are
+ *                             loaded to the environment.
  */
-ClipsPddlParser::ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex)
+ClipsPddlParser::ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex, bool load_clips_templates)
 : clips_(env), clips_mutex_(env_mutex)
 {
-	setup_clips();
+	setup_clips(load_clips_templates);
 }
 
 /** Destructor. */
@@ -87,12 +99,15 @@ ClipsPddlParser::~ClipsPddlParser()
 
 /** Setup CLIPS environment. */
 void
-ClipsPddlParser::setup_clips()
+ClipsPddlParser::setup_clips(bool load_clips_templates)
 {
 	std::lock_guard<std::mutex> lock(clips_mutex_);
 	ADD_FUNCTION("parse-pddl-domain",
 	                    (sigc::slot<void, string>(
 	                      sigc::mem_fun(*this, &ClipsPddlParser::parse_domain))));
+	if(load_clips_templates) {
+		clips_->batch_evaluate((sharedir / "domain.clp").string());
+	}
 }
 /** CLIPS function to parse a PDDL domain.
  * This parses the given domain and asserts domain facts for all parts of the
