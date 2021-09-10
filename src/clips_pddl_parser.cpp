@@ -38,11 +38,10 @@
 #include <clips_pddl_parser/clips_pddl_parser.h>
 #include <clips_pddl_parser/effect_visitor.h>
 #include <clips_pddl_parser/precondition_visitor.h>
-
 #include <pddl_parser/pddl_parser.h>
 #include <spdlog/spdlog.h>
-#include <clipsmm.h>
 
+#include <clipsmm.h>
 #include <filesystem>
 #include <fstream>
 
@@ -66,12 +65,15 @@ namespace clips_pddl_parser {
  */
 
 /** Constructor.
- * @param env CLIPS environment to which to provide the PDDL parsing functionality
+ * @param env CLIPS environment to which to provide the PDDL parsing
+ * functionality
  * @param env_mutex mutex to lock when operating on the CLIPS environment.
  * @param load_clips_templates If true, the target CLIPS fact templates are
  *                             loaded to the environment.
  */
-ClipsPddlParser::ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex, bool load_clips_templates)
+ClipsPddlParser::ClipsPddlParser(CLIPS::Environment *env,
+                                 std::mutex &        env_mutex,
+                                 bool                load_clips_templates)
 : clips_(env), clips_mutex_(env_mutex)
 {
 	setup_clips(load_clips_templates);
@@ -103,9 +105,8 @@ ClipsPddlParser::setup_clips(bool load_clips_templates)
 {
 	std::lock_guard<std::mutex> lock(clips_mutex_);
 	ADD_FUNCTION("parse-pddl-domain",
-	                    (sigc::slot<void, string>(
-	                      sigc::mem_fun(*this, &ClipsPddlParser::parse_domain))));
-	if(load_clips_templates) {
+	             (sigc::slot<void, string>(sigc::mem_fun(*this, &ClipsPddlParser::parse_domain))));
+	if (load_clips_templates) {
 		clips_->batch_evaluate((sharedir / "domain.clp").string());
 	}
 }
@@ -115,8 +116,9 @@ ClipsPddlParser::setup_clips(bool load_clips_templates)
  * @param domain_file The path of the domain file to parse.
  */
 void
-ClipsPddlParser::parse_domain(std::string domain_file) {
-	Domain              domain;
+ClipsPddlParser::parse_domain(std::string domain_file)
+{
+	Domain domain;
 	try {
 		ifstream     df(domain_file);
 		stringstream buffer;
@@ -128,10 +130,17 @@ ClipsPddlParser::parse_domain(std::string domain_file) {
 	}
 	std::lock_guard<std::mutex> lock(clips_mutex_);
 
-	for (const auto &temp : {"pddl-formula", "pddl-predicate", "domain-effect", "domain-object-type", "domain-predicate", "domain-operator-parameter", "domain-operator"}) {
+	for (const auto &temp : {"pddl-formula",
+	                         "pddl-predicate",
+	                         "domain-effect",
+	                         "domain-object-type",
+	                         "domain-predicate",
+	                         "domain-operator-parameter",
+	                         "domain-operator"}) {
 		CLIPS::Template::pointer domain_op = clips_->get_template("domain-operator");
 		if (!clips_->get_template(temp)) {
-			SPDLOG_WARN(std::string("CLIPS_PDDL_Parser: Did not get template ") +  temp + ", did you load pddl_domain.clp?");
+			SPDLOG_WARN(std::string("CLIPS_PDDL_Parser: Did not get template ") + temp
+			            + ", did you load pddl_domain.clp?");
 		}
 	}
 
@@ -182,10 +191,11 @@ ClipsPddlParser::parse_domain(std::string domain_file) {
 			CLIPS::Fact::pointer new_fact = clips_->assert_fact(fact);
 
 			if (!new_fact) {
-				SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-operator-parameter fact failed");
+				SPDLOG_WARN("CLIPS_PDDL_Parser: Asserting domain-operator-parameter "
+				            "fact failed");
 			}
-			}
-		clips_template = clips_->get_template("domain-operator");
+		}
+		clips_template            = clips_->get_template("domain-operator");
 		CLIPS::Fact::pointer fact = CLIPS::Fact::create(*clips_, clips_template);
 		fact->set_slot("name", action.name);
 		fact->set_slot("param-names", params_string);

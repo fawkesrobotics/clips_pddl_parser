@@ -39,8 +39,8 @@
 #define _CLIPS_PDDL_PARSER_H_
 
 #include <clipsmm.h>
-#include <mutex>
 #include <map>
+#include <mutex>
 #include <string>
 
 namespace clips_pddl_parser {
@@ -51,11 +51,9 @@ public:
 	ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex, bool load_clips_templates);
 	~ClipsPddlParser();
 
-
 private:
 	void setup_clips(bool load_clips_templates);
 	void parse_domain(std::string domain_file);
-
 
 private:
 	CLIPS::Environment *clips_;
