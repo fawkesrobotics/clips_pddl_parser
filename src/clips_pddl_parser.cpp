@@ -39,6 +39,7 @@
 #include <clips_pddl_parser/effect_visitor.h>
 #include <clips_pddl_parser/precondition_visitor.h>
 #include <pddl_parser/pddl_parser.h>
+#include <pddl_parser/pddl_exception.h>
 #include <spdlog/spdlog.h>
 
 #include <clipsmm.h>
