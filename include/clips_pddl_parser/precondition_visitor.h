@@ -22,6 +22,7 @@
 #define _PLUGINS_CLIPS_PDDL_PARSER_PRECONDITION_VISITOR_H_
 
 #include <pddl_parser/pddl_parser.h>
+#include <pddl_parser/pddl_exception.h>
 
 #include <boost/variant/variant.hpp>
 #include <string>
