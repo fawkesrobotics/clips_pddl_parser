@@ -84,7 +84,7 @@ ClipsPddlParser::ClipsPddlParser(CLIPS::Environment *env,
 ClipsPddlParser::~ClipsPddlParser()
 {
 	{
-		std::lock_guard<std::mutex> lock(clips_mutex_);
+		//std::lock_guard<std::mutex> lock(clips_mutex_);
 
 		for (auto f : functions_) {
 			clips_->remove_function(f);
@@ -104,7 +104,7 @@ ClipsPddlParser::~ClipsPddlParser()
 void
 ClipsPddlParser::setup_clips(bool load_clips_templates)
 {
-	std::lock_guard<std::mutex> lock(clips_mutex_);
+	//std::lock_guard<std::mutex> lock(clips_mutex_);
 	ADD_FUNCTION("parse-pddl-domain",
 	             (sigc::slot<void, string>(sigc::mem_fun(*this, &ClipsPddlParser::parse_domain))));
 	if (load_clips_templates) {
@@ -129,7 +129,7 @@ ClipsPddlParser::parse_domain(std::string domain_file)
 		SPDLOG_WARN(std::string("CLIPS_PDDL_Parser: Failed to parse domain:") + e.what());
 		return;
 	}
-	std::lock_guard<std::mutex> lock(clips_mutex_);
+	//std::lock_guard<std::mutex> lock(clips_mutex_);
 
 	for (const auto &temp : {"pddl-formula",
 	                         "pddl-predicate",
