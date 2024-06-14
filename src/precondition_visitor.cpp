@@ -20,6 +20,8 @@
 
 #include <clips_pddl_parser/precondition_visitor.h>
 
+#include <sstream>
+
 using namespace std;
 using namespace pddl_parser;
 using namespace clips_pddl_parser;
