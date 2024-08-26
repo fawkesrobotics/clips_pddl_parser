@@ -37,7 +37,7 @@
 
 #ifndef _CLIPS_PDDL_PARSER_H_
 #define _CLIPS_PDDL_PARSER_H_
-#include <clips.h>
+#include <clips_ns/clips.h>
 #undef LHS // to avoid clash with boost
 #undef RHS // to avoid clash with boost
 #include <list>
