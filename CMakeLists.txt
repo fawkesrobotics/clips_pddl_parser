@@ -9,12 +9,12 @@ include(GNUInstallDirs)
 
 find_package(PddlParser REQUIRED)
 find_package(spdlog REQUIRED)
-include(FindPkgConfig)
-pkg_check_modules(clipsmm REQUIRED IMPORTED_TARGET clipsmm-1.0)
+find_package(clips_vendor REQUIRED)
+find_package(clips REQUIRED)
 add_library(clips_pddl_parser SHARED src/clips_pddl_parser.cpp src/precondition_visitor.cpp src/effect_visitor.cpp)
 target_link_libraries(
   clips_pddl_parser PddlParser::pddl_parser
-  PkgConfig::clipsmm spdlog::spdlog)
+  ClipsNS::libclips_ns spdlog::spdlog)
 target_include_directories(
   clips_pddl_parser PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/> $<INSTALL_INTERFACE:include/>)
 target_compile_definitions(
@@ -49,7 +49,7 @@ install(FILES cmake/ClipsPddlParserConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/ClipsPddlParserConfigVersion.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ClipsPddlParser)
 
-set(PKG_CONFIG_REQUIRES "pddl_parser spdlog clipsmm-1.0")
+set(PKG_CONFIG_REQUIRES "pddl_parser spdlog")
 
 configure_file(clips_pddl_parser.pc.in
   ${CMAKE_CURRENT_BINARY_DIR}/clips_pddl_parser.pc @ONLY)

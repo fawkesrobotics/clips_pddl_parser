@@ -37,29 +37,30 @@
 
 #ifndef _CLIPS_PDDL_PARSER_H_
 #define _CLIPS_PDDL_PARSER_H_
-
-#include <clipsmm.h>
-#include <map>
+#include <clips.h>
+#undef LHS // to avoid clash with boost
+#undef RHS // to avoid clash with boost
+#include <list>
 #include <mutex>
 #include <string>
 
 namespace clips_pddl_parser {
 
-class ClipsPddlParser
-{
+class ClipsPddlParser {
 public:
-	ClipsPddlParser(CLIPS::Environment *env, std::mutex &env_mutex, bool load_clips_templates);
-	~ClipsPddlParser();
+  ClipsPddlParser(clips::Environment *env, std::mutex &env_mutex,
+                  bool load_clips_templates);
+  ~ClipsPddlParser();
 
 private:
-	void setup_clips(bool load_clips_templates);
-	void parse_domain(std::string domain_file);
+  void setup_clips(bool load_clips_templates);
+  void parse_domain(std::string domain_file);
 
 private:
-	CLIPS::Environment *clips_;
-	std::mutex &        clips_mutex_;
+  clips::Environment *clips_;
+  std::mutex &clips_mutex_;
 
-	std::list<std::string> functions_;
+  std::list<std::string> functions_;
 };
 
 } // end namespace clips_pddl_parser
