@@ -14,7 +14,7 @@
   <depend>pddl_parser</depend>
   <depend>spdlog</depend>
   <depend>clips_vendor</depend>
-  <depend>PkgConfig</depend>
+  <depend>pkg-config</depend>
 
   <export>
     <build_type>cmake</build_type>
