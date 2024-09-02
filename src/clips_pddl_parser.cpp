@@ -96,7 +96,7 @@ ClipsPddlParser::~ClipsPddlParser() {
 void ClipsPddlParser::setup_clips(bool load_clips_templates) {
   // std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AddUDF(
-      clips_, "parse-pddl-domain", "v", 1, 1, "sy",
+      clips_, "parse-pddl-domain", "v", 1, 1, ";sy",
       [](clips::Environment * /*env*/, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         ClipsPddlParser *instance =
